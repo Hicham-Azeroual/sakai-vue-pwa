@@ -44,6 +44,34 @@ Sakai Vue is a feature-rich dashboard template designed for rapid development of
 
 ---
 
+## ❓ Why Both manifest.json and vite.config.mjs Manifest Config?
+
+### 1. `public/manifest.json`
+
+-   A static file browsers use for installability during development and as a fallback.
+
+### 2. Manifest in `vite.config.mjs` (via vite-plugin-pwa)
+
+-   Lets the plugin generate a manifest dynamically during build, ensuring it is always in sync with the service worker and PWA features.
+-   Recommended best practice: manage your manifest in the plugin config for production.
+
+**What happens if both exist?**
+
+-   In development, the static `public/manifest.json` is used.
+-   In production, the plugin-generated manifest (from `vite.config.mjs`) is used and may overwrite the static one in the output.
+
+| File/Config                | Used For                | When Used        | Who Uses It     |
+| -------------------------- | ----------------------- | ---------------- | --------------- |
+| `public/manifest.json`     | Static manifest         | Dev & fallback   | Browser         |
+| `vite.config.mjs` manifest | Dynamic, plugin-managed | Build/Production | Vite PWA plugin |
+
+**Summary:**
+
+-   The plugin config ensures your manifest and service worker are always compatible and up-to-date for production.
+-   You can remove the static manifest if you rely solely on the plugin for production builds.
+
+---
+
 ## 🛠️ Getting Started
 
 ### Prerequisites
@@ -100,6 +128,20 @@ index.html           # HTML entry point
 
 ---
 
+## 📦 Dependencies
+
+The following dependency was added to enable PWA features:
+
+-   [`vite-plugin-pwa`](https://vite-pwa-org.netlify.app/) – Handles service worker and manifest generation for Vite projects.
+
+To install:
+
+```bash
+npm install vite-plugin-pwa --save-dev
+```
+
+---
+
 ## ⚙️ Technical Details
 
 -   **PWA Dependency:**
@@ -133,3 +175,22 @@ This project is licensed under the MIT License. See [LICENSE.md](LICENSE.md) for
 -   [Vite](https://vitejs.dev/)
 -   [PrimeVue](https://www.primefaces.org/primevue/)
 -   [vite-plugin-pwa](https://vite-pwa-org.netlify.app/)
+
+---
+
+## 📢 Manager Note / Message d'Information
+
+**How to use and test the delivered PWA feature:**
+
+-   The application is now installable as a PWA. To test:
+    1. Run `npm run dev` (for development) or `npm run preview` (for production build preview).
+    2. Open the app in a browser like Chrome or Edge.
+    3. You should see an install prompt in the address bar or browser menu.
+    4. Click to install the app to your desktop or mobile device.
+    5. The app will work offline after the first load.
+
+---
+
+## 📝 Documentation
+
+For detailed documentation on how to use the PWA feature, refer to the [PWA Documentation](https://vite-pwa-org.netlify.app/).
